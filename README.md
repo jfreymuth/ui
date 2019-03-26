@@ -39,10 +39,10 @@ There are three parts to this package:
 The packages in `ui/impl` make up the backend. They are designed to be replaced by better packages later. These are the only packages with external dependencies.
 
 It consists of the following packages (so far):
-- `ui/impl/gofont` supports truetype fonts via github.com/golang/freetype and includes the [go fonts](https://blog.golang.org/go-fonts) as default fonts
+- `ui/impl/gofont` supports truetype fonts via [github.com/golang/freetype](https://github.com/golang/freetype) and includes the [go fonts](https://blog.golang.org/go-fonts) as default fonts
 - `ui/impl/icons` provides some of google's material design icons through [golang.org/x/exp/shiny/iconvg](https://godoc.org/golang.org/x/exp/shiny/iconvg)
-- `ui/impl/gldraw` renders using OpenGL 3.3 (github.com/go-gl/gl)
-- `ui/impl/sdl` is the main backend, it handles window creation and user input. It uses github.com/veandco/go-sdl2
+- `ui/impl/gldraw` renders using OpenGL 3.3 ([github.com/go-gl/gl](https://github.com/go-gl/gl))
+- `ui/impl/sdl` is the main backend, it handles window creation and user input. It uses [github.com/veandco/go-sdl2](https://github.com/veandco/go-sdl2)
 
 ## Usage
 
@@ -74,6 +74,6 @@ func main() {
 
 ### Examples
 
-- [`examples/editor`](tree/master/examples/editor/main.go): a basic text editor, showcases the text area and demonstrates how to implement "save before quitting" comfirmations
-- [`examples/synth`](tree/master/examples/synth): a very simple synthesizer, demonstrates custom widgets and also some concurrency
-- [`examples/test`](tree/master/examples/test/main.go): rather messy, but uses almost every single widget
+- [`examples/editor`](examples/editor/main.go): a basic text editor, showcases the text area and demonstrates how to implement "save before quitting" comfirmations
+- [`examples/synth`](examples/synth): a very simple synthesizer, demonstrates custom widgets and also some concurrency
+- [`examples/test`](examples/test/main.go): rather messy, but uses almost every single widget
