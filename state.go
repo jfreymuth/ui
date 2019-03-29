@@ -12,7 +12,7 @@ type State struct {
 	current   Component
 	disabled  bool
 	hovered   bool            // true: mouse is inside the current component
-	focusable bool            // true: current component has tried to recieve keyboard events
+	focusable bool            // true: current component has tried to receive keyboard events
 	visible   image.Rectangle // visibility request, relative to bounds
 	bounds    image.Rectangle // current component bounds
 
