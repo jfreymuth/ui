@@ -33,6 +33,48 @@ func NewList() *List {
 
 func (l *List) SetTheme(theme *Theme) { l.Theme = theme }
 
+func (l *List) AddItem(text string) { l.AddItemIcon("", text) }
+func (l *List) AddItemIcon(icon, text string) {
+	l.Items = append(l.Items, ListItem{Icon: icon, Text: text})
+}
+
+func (l *List) InsertItem(i int, text string) { l.InsertItemIcon(i, "", text) }
+func (l *List) InsertItemIcon(i int, icon, text string) {
+	if i < 0 {
+		i = 0
+	} else if i > len(l.Items) {
+		i = len(l.Items)
+	}
+	l.Items = append(l.Items, ListItem{})
+	copy(l.Items[i+1:], l.Items[i:])
+	l.Items[i] = ListItem{Icon: icon, Text: text}
+	if l.Selected >= i {
+		l.Selected++
+	}
+}
+
+func (l *List) RemoveItem(i int) {
+	if i < 0 || i >= len(l.Items) {
+		return
+	}
+	l.Items = append(l.Items[:i], l.Items[i+1:]...)
+	if l.Selected > i {
+		l.Selected--
+	}
+}
+
+func (l *List) SwapItems(i, j int) {
+	if i < 0 || i >= len(l.Items) || j < 0 || j >= len(l.Items) {
+		return
+	}
+	l.Items[i], l.Items[j] = l.Items[j], l.Items[i]
+	if l.Selected == i {
+		l.Selected = j
+	} else if l.Selected == j {
+		l.Selected = i
+	}
+}
+
 func (l *List) PreferredSize(fonts draw.FontLookup) (int, int) {
 	w, h := 0, 0
 	font := l.Theme.Font("text")
@@ -87,7 +129,7 @@ func (l *List) Update(g *draw.Buffer, state *ui.State) {
 					l.change(state, l.Selected+1, h)
 				}
 			case ui.KeySpace, ui.KeyEnter:
-				if l.Action != nil {
+				if l.Selected >= 0 && l.Selected < len(l.Items) && l.Action != nil {
 					l.Action(state, l.Items[l.Selected])
 					state.RequestUpdate()
 				}
@@ -129,7 +171,15 @@ func (l *List) Update(g *draw.Buffer, state *ui.State) {
 }
 
 func (l *List) change(state *ui.State, i, h int) {
+	if len(l.Items) == 0 {
+		return
+	}
 	l.Selected = i
+	if l.Selected < 0 {
+		l.Selected = 0
+	} else if l.Selected >= len(l.Items) {
+		l.Selected = len(l.Items)
+	}
 	if l.Changed != nil {
 		l.Changed(state, l.Items[l.Selected])
 		state.RequestUpdate()

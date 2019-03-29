@@ -22,6 +22,9 @@ func NewComboBox() *ComboBox {
 func (c *ComboBox) SetTheme(theme *Theme) { c.sv.SetTheme(theme) }
 
 func (c *ComboBox) PreferredSize(fonts draw.FontLookup) (int, int) {
+	if len(c.Items) == 0 {
+		return 30, 16
+	}
 	w, h := c.List.PreferredSize(fonts)
 	h /= len(c.Items)
 	return w + 30 + h, h + 16
@@ -29,7 +32,15 @@ func (c *ComboBox) PreferredSize(fonts draw.FontLookup) (int, int) {
 
 func (c *ComboBox) Update(g *draw.Buffer, state *ui.State) {
 	w, h := g.Size()
-	item := c.Items[c.Selected]
+	var item ListItem
+	if len(c.Items) > 0 {
+		if c.Selected < 0 {
+			c.Selected = 0
+		} else if c.Selected >= len(c.Items) {
+			c.Selected = len(c.Items) - 1
+		}
+		item = c.Items[c.Selected]
+	}
 	animate(state, &c.anim, 8, state.IsHovered())
 	g.Fill(draw.WH(w, h), draw.Blend(c.Theme.Color("buttonBackground"), c.Theme.Color("buttonHovered"), c.anim))
 	_, th := item.text.Size(item.Text, c.Theme.Font("text"), g.FontLookup)
