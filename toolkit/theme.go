@@ -58,10 +58,10 @@ func (t *Theme) SetColor(name string, c draw.Color) {
 var DefaultTheme = LightTheme
 var LightTheme = &Theme{
 	fonts: map[string]draw.Font{
-		"text":       draw.Font{Name: "default", Size: 12},
-		"title":      draw.Font{Name: "bold", Size: 12},
-		"buttonText": draw.Font{Name: "bold", Size: 12},
-		"inputText":  draw.Font{Name: "default", Size: 12},
+		"text":       {Name: "default", Size: 12},
+		"title":      {Name: "bold", Size: 12},
+		"buttonText": {Name: "bold", Size: 12},
+		"inputText":  {Name: "default", Size: 12},
 	},
 	colors: map[string]draw.Color{
 		"background":           draw.White,
@@ -86,10 +86,10 @@ var LightTheme = &Theme{
 }
 var DarkTheme = &Theme{
 	fonts: map[string]draw.Font{
-		"text":       draw.Font{Name: "default", Size: 12},
-		"title":      draw.Font{Name: "bold", Size: 12},
-		"buttonText": draw.Font{Name: "bold", Size: 12},
-		"inputText":  draw.Font{Name: "default", Size: 12},
+		"text":       {Name: "default", Size: 12},
+		"title":      {Name: "bold", Size: 12},
+		"buttonText": {Name: "bold", Size: 12},
+		"inputText":  {Name: "default", Size: 12},
 	},
 	colors: map[string]draw.Color{
 		"background":           draw.Gray(.3),
