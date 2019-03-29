@@ -16,7 +16,6 @@ type CheckBox struct {
 }
 
 func NewCheckBox(text string) *CheckBox {
-	//return &CheckBox{Label: Label{Color: DefaultTheme.Color("buttonText"), font: DefaultTheme.Font("buttonText"), text: text, h: -1}}
 	return &CheckBox{Theme: DefaultTheme, Text: text}
 }
 
