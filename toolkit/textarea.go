@@ -18,7 +18,7 @@ type TextArea struct {
 	Font, font     draw.Font
 	text           []string
 	cx             int
-	w, h           int
+	w, h, b        int
 	cursor         cursor
 	selectionStart cursor
 	changedLine    int
@@ -195,7 +195,7 @@ func (t *TextArea) Update(g *draw.Buffer, state *ui.State) {
 		cx, cy = x, y
 	}
 	for i := range t.text {
-		g.Text(draw.XYWH(2, 2+i*t.h, w-4, t.h), t.text[i], t.Theme.Color("inputText"), t.font)
+		g.Text(image.Pt(2, 2+i*t.h+t.b), t.text[i], t.Theme.Color("inputText"), t.font)
 	}
 	if t.Editable && cx >= 0 && state.Blink() {
 		g.Fill(draw.XYWH(cx-1, cy, 2, t.h), t.Theme.Color("inputText"))
@@ -363,6 +363,7 @@ func (t *TextArea) measure(state *ui.State, fonts draw.FontLookup) {
 		t.font = t.Font
 		m := fonts.Metrics(t.font)
 		t.h = m.LineHeight()
+		t.b = (t.h + m.Ascent() - m.Descent()) / 2
 		t.w = 200
 		t.slll = 0
 		for i, l := range t.text {

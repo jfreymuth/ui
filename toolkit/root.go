@@ -109,8 +109,7 @@ func (r *Root) Update(g *draw.Buffer, state *ui.State) {
 		mouse := state.MousePos()
 		switch drag := drag.(type) {
 		case string:
-			h := g.FontLookup.Metrics(r.Theme.Font("text")).LineHeight()
-			g.Text(draw.XYWH(mouse.X, mouse.Y, w, h), drag, r.Theme.Color("text"), r.Theme.Font("text"))
+			g.Text(mouse, drag, r.Theme.Color("text"), r.Theme.Font("text"))
 		}
 	}
 }

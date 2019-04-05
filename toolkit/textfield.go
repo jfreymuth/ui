@@ -78,7 +78,7 @@ func (t *TextField) Update(g *draw.Buffer, state *ui.State) {
 	if state.Blink() {
 		g.Fill(draw.XYWH(cx-1, y, 2, th), t.Theme.Color("inputText"))
 	}
-	g.Text(draw.XYXY(3, y, int(x), y+th), t.Text, t.Theme.Color("inputText"), t.Theme.Font("inputText"))
+	t.text.DrawLeft(g, draw.XYXY(3, y, int(x), y+th), t.Text, t.Theme.Font("inputText"), t.Theme.Color("inputText"))
 }
 
 func (t *TextField) handleMouseEvents(state *ui.State, m draw.FontMetrics) {

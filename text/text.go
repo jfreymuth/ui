@@ -7,41 +7,42 @@ import (
 )
 
 type Text struct {
-	text string
-	font draw.Font
-	w, h int
+	text    string
+	font    draw.Font
+	w, h, b int
 }
 
 func (t *Text) Size(text string, font draw.Font, fonts draw.FontLookup) (int, int) {
+	t.measure(text, font, fonts)
+	return t.w, t.h
+}
+
+func (t *Text) measure(text string, font draw.Font, fonts draw.FontLookup) {
 	if text != t.text || font != t.font {
 		t.text, t.font = text, font
 		m := fonts.Metrics(font)
 		t.w, t.h = int(m.Advance(text)), m.LineHeight()
+		t.b = (m.Ascent() - m.Descent()) / 2
 	}
-	return t.w, t.h
 }
 
 func (t *Text) DrawLeft(g *draw.Buffer, r image.Rectangle, text string, font draw.Font, color draw.Color) {
-	g.Text(r, text, color, font)
+	t.measure(text, font, g.FontLookup)
+	g.Add(draw.Text{Position: image.Pt(r.Min.X, (r.Min.Y+r.Max.Y)/2+t.b), Text: text, Font: font, Color: color})
 }
 
 func (t *Text) DrawCentered(g *draw.Buffer, r image.Rectangle, text string, font draw.Font, color draw.Color) {
 	w, _ := t.Size(text, font, g.FontLookup)
-	g.Text(draw.XYWH(r.Min.X+(r.Dx()-w)/2, r.Min.Y, w, r.Dy()), text, color, font)
+	g.Add(draw.Text{Position: image.Pt(r.Min.X+(r.Dx()-w)/2, (r.Min.Y+r.Max.Y)/2+t.b), Text: text, Font: font, Color: color})
 }
 
 func (t *Text) DrawRight(g *draw.Buffer, r image.Rectangle, text string, font draw.Font, color draw.Color) {
 	w, _ := t.Size(text, font, g.FontLookup)
-	r.Min.X = r.Max.X - w
-	g.Text(r, text, color, font)
+	g.Add(draw.Text{Position: image.Pt(r.Max.X-w, (r.Min.Y+r.Max.Y)/2+t.b), Text: text, Font: font, Color: color})
 }
 
 func (t *Text) SizeIcon(text string, font draw.Font, icon string, gap int, fonts draw.FontLookup) (int, int) {
-	if text != t.text || font != t.font {
-		t.text, t.font = text, font
-		m := fonts.Metrics(font)
-		t.w, t.h = int(m.Advance(text)), m.LineHeight()
-	}
+	t.measure(text, font, fonts)
 	if icon != "" {
 		if text == "" {
 			return t.w + t.h, t.h
@@ -54,10 +55,10 @@ func (t *Text) SizeIcon(text string, font draw.Font, icon string, gap int, fonts
 func (t *Text) DrawLeftIcon(g *draw.Buffer, r image.Rectangle, text string, font draw.Font, color draw.Color, icon string, gap int) {
 	_, h := t.SizeIcon(text, font, icon, gap, g.FontLookup)
 	if icon != "" {
-		g.Icon(draw.XYWH(r.Min.X, r.Min.Y, h, r.Dy()), icon, color)
+		g.Add(draw.Icon{Rect: draw.XYWH(r.Min.X, r.Min.Y, h, r.Dy()), Icon: icon, Color: color})
 		r.Min.X += gap + h
 	}
-	g.Text(r, text, color, font)
+	g.Add(draw.Text{Position: image.Pt(r.Min.X, (r.Min.Y+r.Max.Y)/2+t.b), Text: text, Font: font, Color: color})
 }
 
 func (t *Text) DrawCenteredIcon(g *draw.Buffer, r image.Rectangle, text string, font draw.Font, color draw.Color, icon string, gap int) {
@@ -66,17 +67,17 @@ func (t *Text) DrawCenteredIcon(g *draw.Buffer, r image.Rectangle, text string, 
 		if text == "" {
 			gap = 0
 		}
-		g.Icon(draw.XYWH(r.Min.X+(r.Dx()-w-gap-h)/2, r.Min.Y, h, r.Dy()), icon, color)
+		g.Add(draw.Icon{Rect: draw.XYWH(r.Min.X+(r.Dx()-w-gap-h)/2, r.Min.Y, h, r.Dy()), Icon: icon, Color: color})
 		r.Min.X += gap + h
 	}
-	g.Text(draw.XYWH(r.Min.X+(r.Dx()-w)/2, r.Min.Y, w, r.Dy()), text, color, font)
+	g.Add(draw.Text{Position: image.Pt(r.Min.X+(r.Dx()-w)/2, (r.Min.Y+r.Max.Y)/2+t.b), Text: text, Font: font, Color: color})
 }
 
 func (t *Text) DrawRightIcon(g *draw.Buffer, r image.Rectangle, text string, font draw.Font, color draw.Color, icon string, gap int) {
 	w, h := t.Size(text, font, g.FontLookup)
 	if icon != "" {
-		g.Icon(draw.XYWH(r.Min.X+r.Dx()-w-gap-h, r.Min.Y, h, r.Dy()), icon, color)
+		g.Add(draw.Icon{Rect: draw.XYWH(r.Min.X+r.Dx()-w-gap-h, r.Min.Y, h, r.Dy()), Icon: icon, Color: color})
 		r.Min.X += gap + h
 	}
-	g.Text(draw.XYWH(r.Min.X+r.Dx()-w, r.Min.Y, w, r.Dy()), text, color, font)
+	g.Add(draw.Text{Position: image.Pt(r.Max.X-w, (r.Min.Y+r.Max.Y)/2+t.b), Text: text, Font: font, Color: color})
 }

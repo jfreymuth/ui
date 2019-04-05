@@ -185,7 +185,7 @@ func (m *Menu) Update(g *draw.Buffer, state *ui.State) {
 	if submenu && isOpen(m.popup) {
 		g.Fill(draw.WH(w, h), m.Theme.Color("selection"))
 	}
-	g.Text(draw.XYXY(5, 0, w-5, h), m.Text, m.Theme.Color("text"), m.Theme.Font("text"))
+	m.text.DrawLeft(g, draw.XYXY(5, 0, w-5, h), m.Text, m.Theme.Font("text"), m.Theme.Color("text"))
 	if submenu {
 		_, th := m.text.Size(m.Text, m.Theme.Font("text"), g.FontLookup)
 		g.Icon(draw.XYXY(w-th-5, 0, w-5, h), "right", m.Theme.Color("text"))

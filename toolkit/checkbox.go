@@ -44,8 +44,12 @@ func (c *CheckBox) Update(g *draw.Buffer, state *ui.State) {
 
 	animate(state, &c.anim, 8, c.Checked)
 	x := int(c.anim * float32(s+10))
-	g.Add(draw.Command{Bounds: draw.XYXY(5, 5, s+15, h-5), Clip: draw.XYXY(5, 5, 5+x, h-5), Color: DefaultTheme.Color("buttonText"), Text: "checkboxChecked", Style: draw.Icon})
-	g.Add(draw.Command{Bounds: draw.XYXY(5, 5, s+15, h-5), Clip: draw.XYXY(5+x, 5, s+15, h-5), Color: DefaultTheme.Color("buttonText"), Text: "checkbox", Style: draw.Icon})
+	g.Push(draw.XYXY(5, 5, 5+x, h-5))
+	g.Icon(draw.XYXY(0, 0, s+10, h-10), "checkboxChecked", DefaultTheme.Color("buttonText"))
+	g.Pop()
+	g.Push(draw.XYXY(5+x, 5, s+15, h-5))
+	g.Icon(draw.XYWH(-x, 0, s+10, h-10), "checkbox", DefaultTheme.Color("buttonText"))
+	g.Pop()
 	color := DefaultTheme.Color("buttonText")
 	if state.HasKeyboardFocus() {
 		color = DefaultTheme.Color("buttonFocused")

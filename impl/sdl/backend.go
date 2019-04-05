@@ -220,9 +220,10 @@ func Show(opt Options) {
 			}
 		}
 
+		g.Pop()
 		gl.ClearColor(1, 1, 1, 1)
 		gl.Clear(gl.COLOR_BUFFER_BIT)
-		c.Draw(int(w), int(h), g.Commands)
+		c.Draw(int(w), int(h), g.All)
 
 		if state.Cursor() != cursor {
 			cursor = state.Cursor()
