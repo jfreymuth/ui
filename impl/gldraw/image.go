@@ -26,6 +26,7 @@ func (c *Context) getImage(i *image.RGBA, static bool) uint32 {
 		}
 	}
 	t := NewTexture(i)
+	t.c = c
 	var ch uint32
 	if !static {
 		ch = checksum(i)
