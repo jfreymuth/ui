@@ -138,7 +138,7 @@ func (b *Buffer) Icon(r image.Rectangle, id string, c Color) {
 // update should be true if the image has changed since it was last drawn.
 func (b *Buffer) Image(r image.Rectangle, i *image.RGBA, c Color, update bool) {
 	if !b.clip.Empty() {
-		b.Commands = append(b.Commands, Image{Rect: r, Color: c, Image: i})
+		b.Commands = append(b.Commands, Image{Rect: r, Color: c, Image: i, Update: update})
 	}
 }
 
