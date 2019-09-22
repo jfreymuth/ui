@@ -21,6 +21,7 @@ func fatal(err error) {
 func main() {
 
 	themeButton := NewButtonIcon("refresh", "Light Theme", nil)
+	tabs := NewTabContainer()
 
 	mb := NewMenuBar()
 	{
@@ -35,7 +36,9 @@ func main() {
 		sm = sm.AddMenu("Submenu3")
 		sm.AddItem("Submenu1", nil)
 		sm.AddItem("Submenu2", nil)
-		menu.AddItem("Items", nil)
+		menu.AddItem("Open Tab", func(*ui.State) {
+			tabs.AddClosableTab("New Tab", NewLabel("Content"), nil)
+		})
 		menu.AddItem("Quit", (*ui.State).Quit)
 	}
 	{
@@ -120,9 +123,14 @@ func main() {
 			NewLabel(" Size: "), size,
 		),
 	}
+	tabs.AddTab("Test", NewHorizontalDivider(NewScrollView(form), text))
+	tabs.AddClosableTab("More", NewLabel("Second tab"), nil)
+	tabs.AddClosableTab("Tabs", NewLabel("Third tab"), func(state *ui.State, tabIndex int) {
+		ShowConfirmDialog(state, "Confirm", "Close the tab?", "Close", "Cancel", func(*ui.State) { tabs.CloseTab(tabIndex) })
+	})
 	root := NewRoot(&Container{
 		Top:    mb,
-		Center: NewHorizontalDivider(NewScrollView(form), NewShadow(text)),
+		Center: tabs,
 	})
 	themeButton.Action = func(state *ui.State) {
 		if DefaultTheme == LightTheme {
